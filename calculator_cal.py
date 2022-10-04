@@ -52,8 +52,8 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.leftButton.clicked.connect(self.leftBkt)
         self.rightButton.clicked.connect(self.rightBkt)
         #阶乘、平方、立方、n次方
-        self.factButton.connect(self.Factorial)
-        self.sqrtButton.connect(self.Sqrt)
+        self.factButton.clicked.connect(self.Factorial)
+        self.sqrtButton.clicked.connect(self.Sqrt)
         self.squareButton.clicked.connect(self.Square)
         self.cubeButton.clicked.connect(self.Cube)
 
@@ -68,7 +68,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
     
     #按键0-9
     def one(self):
-        self.num.insert('1')
+        self.lineEdit.insert('1')
         self.text += "1"
         
     def two(self):
@@ -137,14 +137,14 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.text = str(result)
     #三角函数按键
     def Sin(self):
-        self.text += "math.sin"
+        self.text += "math.sin("
         self.lineEdit.insert("sin(")
     def Cos(self):
-        self.text += "math.cos"
+        self.text += "math.cos("
         self.lineEdit.insert("cos(")
     def Tan(self):
-        self.text += "math.tan"
-        self.lineEdit.insert("tan")
+        self.text += "math.tan("
+        self.lineEdit.insert("tan(")
     def Pi(self):
         self.text += "math.pi"
         self.lineEdit.insert("π")
@@ -174,7 +174,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
     
     def Sqrt(self):
         self.text += "math.sqrt("
-        self.num
+        self.lineEdit.insert("√(")
     
     
     def Power(self):

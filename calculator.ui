@@ -42,7 +42,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
@@ -78,52 +78,7 @@
           <property name="handleWidth">
            <number>0</number>
           </property>
-          <widget class="QLabel" name="eqt">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Arial Rounded MT Bold</family>
-             <pointsize>12</pointsize>
-             <kerning>true</kerning>
-            </font>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Box</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
-           </property>
-           <property name="lineWidth">
-            <number>0</number>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="wordWrap">
-            <bool>false</bool>
-           </property>
-           <property name="margin">
-            <number>0</number>
-           </property>
-           <property name="indent">
-            <number>12</number>
-           </property>
-          </widget>
-          <widget class="QLabel" name="num">
+          <widget class="QLabel" name="lineEdit">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
              <horstretch>0</horstretch>
@@ -152,7 +107,7 @@
             <number>0</number>
            </property>
            <property name="text">
-            <string>0</string>
+            <string/>
            </property>
            <property name="textFormat">
             <enum>Qt::AutoText</enum>
