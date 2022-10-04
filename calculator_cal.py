@@ -3,9 +3,9 @@
 
 import sys
 import math
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog
 from calculator_ui import Ui_MainWindow
-
+from CustomDialog import CustomDialog
 #创建mywindow类，继承于UI设计中的UI_MainWindow类
 
 class mywindow(QMainWindow, Ui_MainWindow):
@@ -130,11 +130,19 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.text = ""
         self.lineEdit.clear()
     #等号按键
+    
     def calculate(self):
-        self.lineEdit.clear()
-        result = eval(self.text)
-        self.lineEdit.insert(str(result))
-        self.text = str(result)
+        try:
+            self.lineEdit.clear()
+            result = eval(self.text)
+            self.lineEdit.insert(str(result))
+            self.text = str(result)
+        except:
+            dlg = CustomDialog()
+            dlg.exec_()
+            self.text = ""
+            self.lineEdit.clear()
+        
     #三角函数按键
     def Sin(self):
         self.text += "math.sin("
@@ -193,10 +201,10 @@ class mywindow(QMainWindow, Ui_MainWindow):
     
     def Square(self):
         self.Power()
-        self.lineEdit.insert("2)")
+        self.lineEdit.insert(")^2")
         self.text += "2)"
         
     def Cube(self):
         self.Power()
-        self.lineEdit.insert("3)")
+        self.lineEdit.insert(")^3")
         self.text += "3)"
