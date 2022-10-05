@@ -120,7 +120,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
     #百分号按键
     def percentage(self):
         self.lineEdit.insert('%')
-        self.text += "%"
+        self.text += "* 0.01"
 
     #清除按键
     def lineEdit_clear(self):
@@ -185,26 +185,12 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.lineEdit.insert("√(")
     
     
-    def Power(self):
-        for i in range(len(self.text)):
-            if(self.text[len(self.text)-1-i:][0].isdigit() & len(self.text)-1-i!=0):
-                continue
-            if (i == len(self.text)-1):
-                self.text = "pow(" + self.text + ","
-                break
-            else:
-                text_tmp = "pow("+self.text[0-i:]+","
-                self.text = self.text[:0-i]
-                self.text += text_tmp
-                break
-    
-    
     def Square(self):
-        self.Power()
+        # self.Power()
         self.lineEdit.insert(")^2")
-        self.text += "2)"
+        self.text += ") ** 2"
         
     def Cube(self):
-        self.Power()
+        # self.Power()
         self.lineEdit.insert(")^3")
-        self.text += "3)"
+        self.text += ") ** 3"
