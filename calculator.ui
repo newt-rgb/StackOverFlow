@@ -42,7 +42,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -961,8 +961,8 @@
            <widget class="QPushButton" name="addtodo">
             <property name="minimumSize">
              <size>
-              <width>300</width>
-              <height>300</height>
+              <width>500</width>
+              <height>500</height>
              </size>
             </property>
             <property name="font">
