@@ -486,7 +486,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setSpacing(20)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.addtodo = QtWidgets.QPushButton(self.cald)
-        self.addtodo.setMinimumSize(QtCore.QSize(300, 300))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.addtodo.sizePolicy().hasHeightForWidth())
+        self.addtodo.setSizePolicy(sizePolicy)
+        self.addtodo.setMinimumSize(QtCore.QSize(500, 500))
         font = QtGui.QFont()
         font.setFamily("Microsoft JhengHei")
         font.setPointSize(20)
@@ -514,7 +519,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -553,13 +558,3 @@ class Ui_MainWindow(object):
         self.addtodo.setText(_translate("MainWindow", "添加新日程"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.cald), _translate("MainWindow", "日程表"))
 import resource_rc
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())

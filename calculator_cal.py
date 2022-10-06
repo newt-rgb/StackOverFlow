@@ -7,7 +7,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog
 from calculator_ui import Ui_MainWindow
 from CustomDialog import CustomDialog
-from calender_cal import cwindow
+from calendar_cal import cwindow
 from math import *
 
 

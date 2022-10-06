@@ -1,21 +1,21 @@
+from importlib import import_module
 import sys
 import math
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog
 from calculator_ui import Ui_MainWindow
 from CustomDialog import CustomDialog
-from calender import Ui_Form
+from calendar_ui import Ui_Form
 from PyQt5 import QtCore,Qt
+from datetime import date, time, datetime
 import sqlite3
 
-class cwindow(QMainWindow,Ui_Form):
+class cwindow(QWidget,Ui_Form):
     def __init__(self):
         # 实现父类函数的构造
         super().__init__()
-
         self.setupUi(self)
-
         self.confirm.clicked.connect(self.confirms)
-
+        
     def confirms(self):
         date = self.dateEdit.text()
         self.year = date[:4]
