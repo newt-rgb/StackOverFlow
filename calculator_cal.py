@@ -4,11 +4,13 @@
 import sys
 import math
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog
+from PyQt5.QtCore import QEventLoop
+from PyQt5.QtCore import Qt, QFileSystemWatcher
 from calculator_ui import Ui_MainWindow
 from CustomDialog import CustomDialog
 from math import *
 from todoWindow import todoWindow
-
+import json
 # 创建mywindow类，继承于UI设计中的UI_MainWindow类
 
 class mywindow(QMainWindow, Ui_MainWindow):
@@ -18,6 +20,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
         # 实现父类函数的构造
         super().__init__()
         self.setupUi(self)        
+        
         # 以下为对UI中的按钮的同事件函数的连接
         # 回退按钮
         self.delButton.clicked.connect(self.backspace)
@@ -61,7 +64,13 @@ class mywindow(QMainWindow, Ui_MainWindow):
         # 添加日程按键
         self.addw = None
         self.addtodo.clicked.connect(self.addToDoList)
-
+        # 监控data的变化，实时同步
+        self.todolist = []
+        self.fs_watcher = QFileSystemWatcher()
+        self.fs_watcher.addPath('data.json')
+        self.fs_watcher.fileChanged.connect(self.synchro)
+        
+        
     # 以下为事件函数具体实现部分
     result = 0
     #回退按钮
@@ -236,5 +245,15 @@ class mywindow(QMainWindow, Ui_MainWindow):
     # 添加日程
     def addToDoList(self, checked):
         self.addw = todoWindow(self)
+        self.addw.setWindowModality(Qt.ApplicationModal)
         self.addw.show()
-
+    
+    def synchro(self):
+        self.load()
+    
+    def load(self):
+        try:
+            with open("data.json","r") as f:
+                self.todolist = json.load(f)
+        except Exception:
+            pass
