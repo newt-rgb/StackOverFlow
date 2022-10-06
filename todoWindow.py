@@ -97,7 +97,8 @@ class todoWindow(QWidget, Ui_addmenu):
     #处理每隔多少小时
     def altDayEdit(self):
         self.altHour = self.altDay.value()
-
+    
+    #完成添加，存入data.json
     def confirm(self):
         if self.content:
             todos = [self.content,datetime.strftime(self.ddl,"%Y-%m-%d %H:%M"),self.alarmflag,self.advanceDay,self.altHour]
@@ -109,7 +110,7 @@ class todoWindow(QWidget, Ui_addmenu):
             dlg = CustomDialog("待办事项内容不能为空！请重新输入。")
             dlg.exec_()
         
-
+    #加载data.json
     def load(self):
         try:
             with open("data.json","r") as f:
