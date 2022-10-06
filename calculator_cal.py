@@ -3,9 +3,11 @@
 
 import sys
 import math
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog
 from calculator_ui import Ui_MainWindow
 from CustomDialog import CustomDialog
+from calender_cal import cwindow
 from math import *
 
 
@@ -59,6 +61,27 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.sqrtButton.clicked.connect(self.Sqrt)
         self.squareButton.clicked.connect(self.Square)
         self.cubeButton.clicked.connect(self.Cube)
+        self.addtodo.clicked.connect(self.addw)
+
+        #日历控件
+        self.calendarWidget.selectionChanged.connect(self.addw)
+
+    def getdate(self):
+        date = QtCore.QDate(self.calendarWidget.selectedDate())
+        self.year = date.year()
+        self.month = date.month()
+        self.day = date.day()
+
+
+    def addw(self):
+        self.addw = cwindow()
+        self.addw.dateEdit.setDate(self.calendarWidget.selectedDate())
+        ddllist = ["1天前","3天前","7天前","15天前","30天前"]
+        gaplist = ["1天","3天","7天"]
+        self.addw.comboBox.addItems(ddllist)
+        self.addw.comboBox_2.addItems(gaplist)
+
+        self.addw.show()
 
     # 以下为事件函数具体实现部分
     result = 0
