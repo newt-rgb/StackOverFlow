@@ -2,7 +2,7 @@
 import sqlite3
 import sys
 import math
-from PyQt5.QtCore import Qt, QFileSystemWatcher
+from PyQt5.QtCore import Qt, QFileSystemWatcher, QDate, QPoint
 from PyQt5 import QtCore
 from PyQt5 import QtGui,QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog, QListWidget, QMessageBox, QListWidgetItem, QPushButton
@@ -362,8 +362,9 @@ class mywindow(QMainWindow, Ui_MainWindow):
             row = (_event,)
             cursor.execute(query,row)
             db.commit()
+            self.calendarWidget.updateCells()
         except:
             dlg = CustomDialog("这天没有事项！")
             dlg.exec_
+    
 
-        

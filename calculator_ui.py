@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from new_QcalendarWidget import newCalendar
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -485,7 +485,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setSpacing(50)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.calendarWidget = QtWidgets.QCalendarWidget(self.cald)
+        self.calendarWidget = newCalendar(self.cald)
         self.calendarWidget.setObjectName("calendarWidget")
         self.horizontalLayout_2.addWidget(self.calendarWidget)
         self.splitter_2 = QtWidgets.QSplitter(self.cald)
