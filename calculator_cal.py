@@ -309,7 +309,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
             elif result[3] == "0":
                 item.setCheckState(QtCore.Qt.Unchecked)
             self.tasklist.addItem(item)
-        return
+        self.tasklist.setCurrentRow(0)
     
     #根据查询结果返回距离截止时间和下一次提醒时间的时长
     def CalcStamp(self, calist):
@@ -330,14 +330,19 @@ class mywindow(QMainWindow, Ui_MainWindow):
             return stamp_1,"任务不需要提醒"
         
         
-        infrom_list = self.getInformDateTime(calist[4])
-        delta_2 = infrom_list[0]- curdatetime
+        inform_list = self.getInformDateTime(calist[4])
+        delta_2 = []
+        for i,_datetime in enumerate(inform_list):
+            delta_2.append(inform_list[i]- curdatetime)
         
-        if delta_2.days < 0 or delta_2.seconds < 0:
-            return stamp_1,"提醒已过时"
-        
-        stamp_2 = "{}天{}小时".format(delta_2.days, int(delta_2.seconds / 3600))
-        return stamp_1,stamp_2
+        for i,_delta in enumerate(delta_2):
+            if _delta.days < 0 or _delta.seconds < 0 :
+                continue
+            else:
+                stamp_2 = "{}天{}小时".format(_delta.days, int(_delta.seconds / 3600))
+                return stamp_1,stamp_2
+
+        return stamp_1,"提醒已过时"
 
     #将提醒几次转换成具体时间
     def getInformDateTime(self, datestr):
@@ -349,12 +354,16 @@ class mywindow(QMainWindow, Ui_MainWindow):
 
     #删除事项
     def deleteEvent(self):
-        _event = str(self.tasklist.currentItem().text().splitlines(False)[0][5:])
-        db = sqlite3.connect("database.db")
-        cursor = db.cursor()
-        query = "DELETE FROM Data WHERE event = ?"
-        row = (_event,)
-        cursor.execute(query,row)
-        db.commit()
-        
+        try:
+            _event = str(self.tasklist.currentItem().text().splitlines(False)[0][5:])
+            db = sqlite3.connect("database.db")
+            cursor = db.cursor()
+            query = "DELETE FROM Data WHERE event = ?"
+            row = (_event,)
+            cursor.execute(query,row)
+            db.commit()
+        except:
+            dlg = CustomDialog("这天没有事项！")
+            dlg.exec_
+
         
