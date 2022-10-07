@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>534</width>
-    <height>332</height>
+    <width>588</width>
+    <height>301</height>
    </rect>
   </property>
   <property name="font">
@@ -61,21 +61,17 @@
        <string>事件名称</string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="rightMargin">
+        <number>100</number>
+       </property>
        <item>
-        <widget class="QDateEdit" name="dateEdit">
+        <widget class="QLineEdit" name="lineEdit_2">
          <property name="font">
           <font>
-           <family>Adobe Devanagari</family>
            <pointsize>14</pointsize>
           </font>
-         </property>
-         <property name="currentSection">
-          <enum>QDateTimeEdit::NoSection</enum>
-         </property>
-         <property name="displayFormat">
-          <string>开始:  yyyy年M月d日</string>
          </property>
         </widget>
        </item>
@@ -104,59 +100,44 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <property name="spacing">
-        <number>8</number>
-       </property>
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <property name="rightMargin">
-        <number>150</number>
+        <number>287</number>
        </property>
        <item>
-        <widget class="QLabel" name="label_3">
-         <property name="font">
-          <font>
-           <family>Adobe Devanagari</family>
-           <pointsize>14</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>提醒我：</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="comboBox">
-         <property name="font">
-          <font>
-           <family>等线 Light</family>
-           <pointsize>14</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_2">
-         <property name="font">
-          <font>
-           <family>黑体</family>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>开启提醒</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="font">
+            <font>
+             <family>Adobe Devanagari</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>提醒我：</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBox">
+           <property name="font">
+            <font>
+             <family>等线 Light</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <property name="spacing">
-        <number>7</number>
-       </property>
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
        <property name="rightMargin">
-        <number>274</number>
+        <number>287</number>
        </property>
        <item>
         <widget class="QLabel" name="label_4">
@@ -167,7 +148,7 @@
           </font>
          </property>
          <property name="text">
-          <string>提醒周期：</string>
+          <string>提醒次数：</string>
          </property>
         </widget>
        </item>
@@ -183,44 +164,26 @@
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="confirm">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>添加日程</string>
-     </property>
+     <widget class="QPushButton" name="confirm">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>添加日程</string>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>checkBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>dateEdit</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>132</x>
-     <y>245</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>258</x>
-     <y>119</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>checkBox</sender>
    <signal>toggled(bool)</signal>

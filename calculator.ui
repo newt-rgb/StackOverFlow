@@ -951,58 +951,24 @@
        <attribute name="title">
         <string>日程表</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="spacing">
-           <number>20</number>
+           <number>90</number>
           </property>
           <item>
-           <widget class="QPushButton" name="addtodo">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>500</width>
-              <height>500</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>Microsoft JhengHei</family>
-              <pointsize>20</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-              <underline>false</underline>
-             </font>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::LeftToRight</enum>
-            </property>
-            <property name="text">
-             <string>添加新日程</string>
-            </property>
-            <property name="icon">
-             <iconset resource="resource.qrc">
-              <normaloff>:/icons/tianjia.png</normaloff>:/icons/tianjia.png</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>80</width>
-              <height>80</height>
-             </size>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-           </widget>
+           <widget class="QCalendarWidget" name="calendarWidget"/>
           </item>
           <item>
-           <widget class="QCalendarWidget" name="calendarWidget"/>
+           <widget class="QListWidget" name="tasklist">
+            <property name="font">
+             <font>
+              <family>Adobe Devanagari</family>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>

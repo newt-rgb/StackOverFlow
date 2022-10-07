@@ -8,7 +8,7 @@ from calendar_ui import Ui_Form
 from PyQt5 import QtCore,Qt
 from datetime import date, time, datetime
 import sqlite3
-
+advmin = {"0分钟前":0,"5分钟前":5,"15分钟前":15,"30分钟前":30,"1小时前":60,"12小时前":12*60,"1天前":24*60,"3天前":3*24*60,"1周前":7*24*60}
 class cwindow(QWidget,Ui_Form):
     def __init__(self):
         # 实现父类函数的构造

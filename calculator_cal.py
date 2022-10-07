@@ -1,15 +1,16 @@
 # 主要完成在计算器中点击事件的信号和事件函数的连接
-
-
+import sqlite3
 import sys
 import math
+from PyQt5.QtCore import Qt, QFileSystemWatcher
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog
+from PyQt5 import QtGui,QtWidgets
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog, QListWidget, QMessageBox, QListWidgetItem
 from calculator_ui import Ui_MainWindow
 from CustomDialog import CustomDialog
 from calendar_cal import cwindow
 from math import *
-
+from datetime import datetime, date, time, timedelta
 
 # 创建mywindow类，继承于UI设计中的UI_MainWindow类
 
@@ -61,27 +62,18 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.sqrtButton.clicked.connect(self.Sqrt)
         self.squareButton.clicked.connect(self.Square)
         self.cubeButton.clicked.connect(self.Cube)
-        self.addtodo.clicked.connect(self.addw)
 
         #日历控件
-        self.calendarWidget.selectionChanged.connect(self.addw)
-
-    def getdate(self):
-        date = QtCore.QDate(self.calendarWidget.selectedDate())
-        self.year = date.year()
-        self.month = date.month()
-        self.day = date.day()
-
-
-    def addw(self):
-        self.addw = cwindow()
-        self.addw.dateEdit.setDate(self.calendarWidget.selectedDate())
-        ddllist = ["1天前","3天前","7天前","15天前","30天前"]
-        gaplist = ["1天","3天","7天"]
-        self.addw.comboBox.addItems(ddllist)
-        self.addw.comboBox_2.addItems(gaplist)
-
-        self.addw.show()
+        #单击查看当日日程情况
+        self.calendarWidget.selectionChanged.connect(self.calendarDateChanged)
+        self.calendarDateChanged()
+        #双击添加新日程
+        self.table = self.calendarWidget.findChild(QtWidgets.QTableView)
+        self.table.viewport().installEventFilter(self)
+        #跟踪数据库变化
+        self.fs_watcher = QFileSystemWatcher()
+        self.fs_watcher.addPath('data.json')
+        self.fs_watcher.fileChanged.connect(self.updateTasklist)
 
     # 以下为事件函数具体实现部分
     result = 0
@@ -254,4 +246,88 @@ class mywindow(QMainWindow, Ui_MainWindow):
             self.text = ""
             self.lineEdit.clear()
 
+    #得到当前的日期
+    def getdate(self):
+        date = QtCore.QDate(self.calendarWidget.selectedDate())
+        self.year = date.year()
+        self.month = date.month()
+        self.day = date.day()
 
+    #添加新日程界面
+    def addevent(self):
+        self.addw = cwindow()
+        date = self.calendarWidget.selectedDate().toPyDate().strftime("开始:%Y年%m月%d日")
+        self.addw.lineEdit_2.setText(date)
+        ddllist = ["从不","0分钟前","5分钟前","15分钟前","30分钟前","1小时前","12小时前","1天前","3天前","1周前"]
+        freqlist = ["1次","2次","3次"]
+        self.addw.comboBox.addItems(ddllist)
+        self.addw.comboBox_2.addItems(freqlist)
+        self.addw.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.addw.show() 
+    
+    #双击判断
+    def eventFilter(self, source, event):
+        if (event.type() == QtCore.QEvent.MouseButtonDblClick and
+            source is self.table.viewport()):
+            self.addevent()
+        return super().eventFilter(source, event)
+
+    #日历选择变化，事项清单改变
+    def calendarDateChanged(self):
+        dateselected = self.calendarWidget.selectedDate().toPyDate()
+        self.updateTasklist(dateselected)
+    
+    #更新事项清单
+    def updateTasklist(self, date):
+        self.tasklist.clear()
+        #关联数据库
+        db = sqlite3.connect("database.db")
+        cursor = db.cursor()
+        strdate = date.strftime("%Y-%m-%d")
+        query = "SELECT event,date,time,completed,frequency,advance FROM Data WHERE date = ?"
+        row = (strdate,)
+        curdatetime = datetime.today()
+        
+        results = cursor.execute(query, row).fetchall()
+        
+        for result in results:
+            #计算距离截止时间和下次提醒时间还有多久
+            stamp_1,stamp_2 = self.CalcStamp(result)
+            detail = "事件 : {:^}\n距离截止时间 : {:^}\n距离下次提醒时间 : {:^}".format(result[0],stamp_1,stamp_2)
+            item = QListWidgetItem(detail)
+            item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+            if result[3] == '1':
+                item.setCheckState(QtCore.Qt.Checked)
+            elif result[3] == "0":
+                item.setCheckState(QtCore.Qt.Unchecked)
+            self.tasklist.addItem(item)
+    
+    #根据查询结果返回距离截止时间和下一次提醒时间的时长
+    def CalcStamp(self, calist):
+        curdatetime = datetime.today()
+        ddl = datetime.strptime(calist[1]+calist[2],"%Y-%m-%d%H:%M")
+        
+        if calist[3] == '0' and (ddl < curdatetime):
+            return "任务已过时","任务已过时"
+        
+        if calist[3] == '1':
+            return "任务已完成","任务已完成"
+        
+        delta = ddl - curdatetime
+        stamp_1 = "{}天{}小时".format(delta.days, int(delta.seconds / 3600))
+        
+        if calist[5] == '从不':
+            return stamp_1,"任务不需要提醒"
+        
+        infrom_list = self.getInformDateTime(calist[4])
+        delta_2 = infrom_list[0]- curdatetime
+        stamp_2 = "{}天{}小时".format(delta_2.days, int(delta_2.seconds / 3600))
+        return stamp_1,stamp_2
+
+    #将提醒几次转换成具体时间
+    def getInformDateTime(self, datestr):
+        datelist = []
+        datestr = datestr.split(',')
+        for dt in datestr:
+            datelist.append(datetime.strptime(dt,"%Y-%m-%d %H:%M"))
+        return datelist
