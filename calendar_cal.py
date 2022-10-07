@@ -26,7 +26,7 @@ class cwindow(QWidget,Ui_Form):
             self.freqEdit.setDisabled(False)
         
     def confirms(self):
-        _event = self.lineEdit.text()
+        _event = self.lineEdit.text().strip()
         if _event == "":
             dlg = CustomDialog("事项不能为空！")
             dlg.exec_()

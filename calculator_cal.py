@@ -5,7 +5,7 @@ import math
 from PyQt5.QtCore import Qt, QFileSystemWatcher
 from PyQt5 import QtCore
 from PyQt5 import QtGui,QtWidgets
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog, QListWidget, QMessageBox, QListWidgetItem
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog, QListWidget, QMessageBox, QListWidgetItem, QPushButton
 from calculator_ui import Ui_MainWindow
 from CustomDialog import CustomDialog
 from calendar_cal import cwindow
@@ -70,6 +70,10 @@ class mywindow(QMainWindow, Ui_MainWindow):
         #双击添加新日程
         self.table = self.calendarWidget.findChild(QtWidgets.QTableView)
         self.table.viewport().installEventFilter(self)
+        #按键添加新日程
+        self.addButton.clicked.connect(self.addevent)
+        #按键删除新日程
+        self.deleteButton.clicked.connect(self.deleteEvent)
         #跟踪数据库变化
         self.fs_watcher = QFileSystemWatcher()
         self.fs_watcher.addPath('database.db')
@@ -342,3 +346,15 @@ class mywindow(QMainWindow, Ui_MainWindow):
         for dt in datestr:
             datelist.append(datetime.strptime(dt,"%Y-%m-%d %H:%M"))
         return datelist
+
+    #删除事项
+    def deleteEvent(self):
+        _event = str(self.tasklist.currentItem().text().splitlines(False)[0][5:])
+        db = sqlite3.connect("database.db")
+        cursor = db.cursor()
+        query = "DELETE FROM Data WHERE event = ?"
+        row = (_event,)
+        cursor.execute(query,row)
+        db.commit()
+        
+        
