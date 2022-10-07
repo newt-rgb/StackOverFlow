@@ -72,8 +72,8 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.table.viewport().installEventFilter(self)
         #跟踪数据库变化
         self.fs_watcher = QFileSystemWatcher()
-        self.fs_watcher.addPath('data.json')
-        self.fs_watcher.fileChanged.connect(self.updateTasklist)
+        self.fs_watcher.addPath('database.db')
+        self.fs_watcher.fileChanged.connect(lambda : self.updateTasklist(self.calendarWidget.selectedDate().toPyDate()))
 
     # 以下为事件函数具体实现部分
     result = 0
@@ -260,9 +260,10 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.addw.lineEdit_2.setText(date)
         ddllist = ["从不","0分钟前","5分钟前","15分钟前","30分钟前","1小时前","12小时前","1天前","3天前","1周前"]
         freqlist = ["1次","2次","3次"]
-        self.addw.comboBox.addItems(ddllist)
-        self.addw.comboBox_2.addItems(freqlist)
+        self.addw.advEdit.addItems(ddllist)
+        self.addw.freqEdit.addItems(freqlist)
         self.addw.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.addw.neverInform()
         self.addw.show() 
     
     #双击判断
@@ -278,12 +279,12 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.updateTasklist(dateselected)
     
     #更新事项清单
-    def updateTasklist(self, date):
+    def updateTasklist(self, _date):
         self.tasklist.clear()
         #关联数据库
         db = sqlite3.connect("database.db")
         cursor = db.cursor()
-        strdate = date.strftime("%Y-%m-%d")
+        strdate = _date.strftime("%Y-%m-%d")
         query = "SELECT event,date,time,completed,frequency,advance FROM Data WHERE date = ?"
         row = (strdate,)
         curdatetime = datetime.today()
@@ -301,7 +302,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
             elif result[3] == "0":
                 item.setCheckState(QtCore.Qt.Unchecked)
             self.tasklist.addItem(item)
-    
+        return
     #根据查询结果返回距离截止时间和下一次提醒时间的时长
     def CalcStamp(self, calist):
         curdatetime = datetime.today()
