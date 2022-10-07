@@ -40,12 +40,16 @@ class cwindow(QWidget,Ui_Form):
         cursor = con.cursor()
         sql = "INSERT INTO Data (event,date,Time,completed,frequency,advance) VALUES (?,?,?,?,?,?)"
         row = (_event,_date,_time,'0',_datetimeList,self.advEdit.currentText(),)
-        
-        cursor.execute(sql,row)
-        cursor.close()
-        con.commit()
-        con.close()
-        self.close()
+        try:
+            cursor.execute(sql,row)
+            cursor.close()
+            con.commit()
+            con.close()
+            self.close()
+        except:
+            dlg = CustomDialog("该时间已存在事件！")
+            dlg.exec()
+
 
     #算出所有需要发通知的时间，组成字符串
     def getDatetimeList(self, d, t, adv, freq):
