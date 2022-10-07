@@ -256,8 +256,11 @@ class mywindow(QMainWindow, Ui_MainWindow):
     #添加新日程界面
     def addevent(self):
         self.addw = cwindow()
-        date = self.calendarWidget.selectedDate().toPyDate().strftime("开始:%Y年%m月%d日")
-        self.addw.lineEdit_2.setText(date)
+        _date = self.calendarWidget.selectedDate().toPyDate().strftime("开始:%Y年%m月%d日")
+        self.addw.lineEdit_2.setText(_date)
+        curDate = date.today()
+        selcDate = self.calendarWidget.selectedDate().toPyDate()
+
         ddllist = ["从不","0分钟前","5分钟前","15分钟前","30分钟前","1小时前","12小时前","1天前","3天前","1周前"]
         freqlist = ["1次","2次","3次"]
         self.addw.advEdit.addItems(ddllist)
@@ -303,6 +306,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
                 item.setCheckState(QtCore.Qt.Unchecked)
             self.tasklist.addItem(item)
         return
+    
     #根据查询结果返回距离截止时间和下一次提醒时间的时长
     def CalcStamp(self, calist):
         curdatetime = datetime.today()
@@ -315,13 +319,19 @@ class mywindow(QMainWindow, Ui_MainWindow):
             return "任务已完成","任务已完成"
         
         delta = ddl - curdatetime
+        
         stamp_1 = "{}天{}小时".format(delta.days, int(delta.seconds / 3600))
         
         if calist[5] == '从不':
             return stamp_1,"任务不需要提醒"
         
+        
         infrom_list = self.getInformDateTime(calist[4])
         delta_2 = infrom_list[0]- curdatetime
+        
+        if delta_2.days < 0 or delta_2.seconds < 0:
+            return stamp_1,"提醒已过时"
+        
         stamp_2 = "{}天{}小时".format(delta_2.days, int(delta_2.seconds / 3600))
         return stamp_1,stamp_2
 
