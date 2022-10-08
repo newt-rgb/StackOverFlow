@@ -381,11 +381,14 @@ class mywindow(QMainWindow, Ui_MainWindow):
     #删除事项
     def deleteEvent(self):
         try:
-            _event = str(self.tasklist.currentItem().text().splitlines(False)[0][5:])
+            _datetime_ = str(self.tasklist.currentItem().text().splitlines(False)[1][7:])
+            _date = _datetime_.split(' ')[0]
+            _time = _datetime_.split(' ')[1]
+
             db = sqlite3.connect("database.db")
             cursor = db.cursor()
-            query = "DELETE FROM Data WHERE event = ?"
-            row = (_event,)
+            query = "DELETE FROM Data WHERE date = ? AND Time = ?"
+            row = (_date,_time,)
             cursor.execute(query,row)
             db.commit()
             self.calendarWidget.updateCells()
@@ -395,12 +398,12 @@ class mywindow(QMainWindow, Ui_MainWindow):
     
     #更改数据库中的事项完成属性
     def isComplete(self):
-        _datetime_ = str(self.tasklist.currentItem().text().splitlines(False)[1][9:])
+        _datetime_ = str(self.tasklist.currentItem().text().splitlines(False)[1][7:])
         _date = _datetime_.split(' ')[0]
         _time = _datetime_.split(' ')[1]
         db = sqlite3.connect("database.db")
         cursor = db.cursor()
-        
+
         if self.tasklist.currentItem().checkState() == Qt.Checked:
             query = "UPDATE Data  SET completed = '1' WHERE date = ? AND Time = ?"
         else:
