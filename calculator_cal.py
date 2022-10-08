@@ -2,7 +2,7 @@
 import sqlite3
 import sys
 import math
-from PyQt5.QtCore import Qt, QFileSystemWatcher, QDate, QPoint
+from PyQt5.QtCore import Qt, QFileSystemWatcher, QDate, QPoint,QTimer
 from PyQt5 import QtCore
 from PyQt5 import QtGui,QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDialog, QListWidget, QMessageBox, QListWidgetItem, QPushButton
@@ -11,7 +11,9 @@ from CustomDialog import CustomDialog
 from calendar_cal import cwindow
 from math import *
 from datetime import datetime, date, time, timedelta
-
+from win10toast import ToastNotifier
+import threading
+toast = ToastNotifier()
 # 创建mywindow类，继承于UI设计中的UI_MainWindow类
 
 class mywindow(QMainWindow, Ui_MainWindow):
@@ -80,6 +82,13 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.fs_watcher.fileChanged.connect(lambda : self.updateTasklist(self.calendarWidget.selectedDate().toPyDate()))
         #更新完成状态
         self.tasklist.itemChanged.connect(self.isComplete)
+        #以下实现闹铃功能
+        # self.thread = threading.Thread(target = self.checkInform)
+        # self.thread.start()
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.checkInform)
+        self.timer.start(60000)
+        self.checkInform()
     # 以下为事件函数具体实现部分
     result = 0
     #回退按钮
@@ -397,3 +406,28 @@ class mywindow(QMainWindow, Ui_MainWindow):
         cursor.execute(query,row)
         db.commit()
         self.calendarWidget.updateCells()
+    
+    #每分钟检查一次
+    def checkInform(self):
+        db = sqlite3.connect("database.db")
+        cursor = db.cursor()
+        curtime = datetime.today().strftime('%Y-%m-%d %H:%M')
+        query = "SELECT event,frequency FROM Data WHERE completed = '0'"
+        results = cursor.execute(query).fetchall()
+        for _data in results:
+            if _data[1] == '':
+                continue
+            else:
+                all_date = _data[1].split(',')
+            for _date in all_date:
+                if curtime == _date:
+                    toast.show_toast(
+                        '提醒！',
+                        _data[0],
+                        duration=5,
+                        threaded=True
+                    )
+                    self.updateTasklist(self.calendarWidget.selectedDate().toPyDate())
+        cursor.close()
+        db.close()
+        

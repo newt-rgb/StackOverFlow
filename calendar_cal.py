@@ -18,13 +18,13 @@ class cwindow(QWidget,Ui_Form):
         #当提醒时间选择从不时，禁止编辑提醒次数
         self.advEdit.activated.connect(self.neverInform)
         self.confirm.clicked.connect(self.confirms)
-        
+    #设置选择从不时，提醒时间不可提前    
     def neverInform(self):
         if self.advEdit.currentText() in ['从不','0分钟前']:
             self.freqEdit.setDisabled(True)
         else:
             self.freqEdit.setDisabled(False)
-        
+    #添加确认功能实现    
     def confirms(self):
         _event = self.lineEdit.text().strip()
         if _event == "":

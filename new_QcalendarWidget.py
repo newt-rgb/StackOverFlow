@@ -39,14 +39,4 @@ class newCalendar(QCalendarWidget):
                 painter.setBrush(Qt.red)
                 painter.drawEllipse(rect.topLeft() + QPoint(12, 7), 6, 6)
             
-        for i,_datelist in enumerate(list_of_freq):
-            for _date in _datelist:
-                if _date < QDate.currentDate():
-                    continue
-                else:
-                    if list_of_comp[i] == '1' and _date == date:
-                        continue
-                    elif list_of_comp[i] == '0' and _date == date:
-                        painter.setBrush(Qt.blue)
-                        painter.drawEllipse(rect.topRight() + QPoint(-12, 7), 6, 6)
             
