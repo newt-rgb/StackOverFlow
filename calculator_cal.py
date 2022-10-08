@@ -1,5 +1,6 @@
 # 主要完成在计算器中点击事件的信号和事件函数的连接
 import sqlite3
+import frozen_dir
 import sys
 import math
 from PyQt5.QtCore import Qt, QFileSystemWatcher, QDate, QPoint,QTimer
@@ -24,6 +25,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
+        self.base = frozen_dir.app_path()
         # 以下为对UI中的按钮的同事件函数的连接
         # 回退按钮
         self.delButton.clicked.connect(self.backspace)
@@ -78,7 +80,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.deleteButton.clicked.connect(self.deleteEvent)
         #跟踪数据库变化
         self.fs_watcher = QFileSystemWatcher()
-        self.fs_watcher.addPath('database.db')
+        self.fs_watcher.addPath('{}\database.db'.format(self.base))
         self.fs_watcher.fileChanged.connect(lambda : self.updateTasklist(self.calendarWidget.selectedDate().toPyDate()))
         #更新完成状态
         self.tasklist.itemChanged.connect(self.isComplete)
@@ -313,7 +315,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
     def updateTasklist(self, _date):
         self.tasklist.clear()
         #关联数据库
-        db = sqlite3.connect("database.db")
+        db = sqlite3.connect('{}\database.db'.format(self.base))
         cursor = db.cursor()
         strdate = _date.strftime("%Y-%m-%d")
         query = "SELECT event,date,time,completed,frequency,advance FROM Data WHERE date = ?"
@@ -385,7 +387,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
             _date = _datetime_.split(' ')[0]
             _time = _datetime_.split(' ')[1]
 
-            db = sqlite3.connect("database.db")
+            db = sqlite3.connect('{}\database.db'.format(self.base))
             cursor = db.cursor()
             query = "DELETE FROM Data WHERE date = ? AND Time = ?"
             row = (_date,_time,)
@@ -401,7 +403,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
         _datetime_ = str(self.tasklist.currentItem().text().splitlines(False)[1][7:])
         _date = _datetime_.split(' ')[0]
         _time = _datetime_.split(' ')[1]
-        db = sqlite3.connect("database.db")
+        db = sqlite3.connect('{}\database.db'.format(self.base))
         cursor = db.cursor()
 
         if self.tasklist.currentItem().checkState() == Qt.Checked:
@@ -415,7 +417,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
     
     #每分钟检查一次
     def checkInform(self):
-        db = sqlite3.connect("database.db")
+        db = sqlite3.connect('{}\database.db'.format(self.base))
         cursor = db.cursor()
         curtime = datetime.today().strftime('%Y-%m-%d %H:%M')
         query = "SELECT event,frequency FROM Data WHERE completed = '0'"

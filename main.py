@@ -4,6 +4,7 @@ from PyQt5.QtGui import QIcon
 from calculator_ui import Ui_MainWindow
 from calculator_cal import mywindow
 from PyQt5 import QtWidgets,QtCore
+import icon_rc
 #实例化mywindow对象，展示页面
         
 
@@ -11,7 +12,7 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
-    icon = QIcon("icon.png")
+    icon = QIcon(":/icon/icon.png")
     #设置窗口图标
     w = mywindow()
     w.setWindowIcon(icon)

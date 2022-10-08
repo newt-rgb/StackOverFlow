@@ -571,7 +571,6 @@ class Ui_MainWindow(object):
         self.addButton.setText(_translate("MainWindow", "添加新日程"))
         self.deleteButton.setText(_translate("MainWindow", "删除日程"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.cald), _translate("MainWindow", "日程表"))
-import resource_rc
 
 
 if __name__ == "__main__":

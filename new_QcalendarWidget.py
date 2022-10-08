@@ -2,17 +2,19 @@ from PyQt5.QtWidgets import QCalendarWidget
 from PyQt5.QtCore import QPoint, QDate, Qt
 from PyQt5 import QtWidgets
 import sqlite3
+import frozen_dir
 from datetime import date, datetime, time
 
 
 class newCalendar(QCalendarWidget):
     def __init__(self,_tab):
         super().__init__(_tab)
-    
+
+    base = frozen_dir.app_path()
     #给日历加上小红点如果这天有日程
     def paintCell(self, painter, rect, date):
         super().paintCell(painter, rect, date)
-        db = sqlite3.connect("database.db")
+        db = sqlite3.connect('{}\database.db'.format(self.base))
         cursor = db.cursor()
         query = "SELECT date,completed,frequency FROM Data"
         results = cursor.execute(query).fetchall()
