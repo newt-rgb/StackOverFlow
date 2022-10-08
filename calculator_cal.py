@@ -325,7 +325,8 @@ class mywindow(QMainWindow, Ui_MainWindow):
         for result in results:
             #计算距离截止时间和下次提醒时间还有多久
             stamp_1,stamp_2 = self.CalcStamp(result)
-            detail = "事件 : {:^}\n距离截止时间 : {:^}\n距离下次提醒时间 : {:^}".format(result[0],stamp_1,stamp_2)
+            _datetime = result[1] + ' ' + result[2]
+            detail = "事件 : {:^}\n截止时间 : {:^}\n距离截止时间 : {:^}\n距离下次提醒时间 : {:^}".format(result[0],_datetime,stamp_1,stamp_2)
             item = QListWidgetItem(detail)
             item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
             if result[3] == '1':
@@ -394,15 +395,17 @@ class mywindow(QMainWindow, Ui_MainWindow):
     
     #更改数据库中的事项完成属性
     def isComplete(self):
-        _event = str(self.tasklist.currentItem().text().splitlines(False)[0][5:])
+        _datetime_ = str(self.tasklist.currentItem().text().splitlines(False)[1][9:])
+        _date = _datetime_.split(' ')[0]
+        _time = _datetime_.split(' ')[1]
         db = sqlite3.connect("database.db")
         cursor = db.cursor()
         
         if self.tasklist.currentItem().checkState() == Qt.Checked:
-            query = "UPDATE Data  SET completed = '1' WHERE event = ?"
+            query = "UPDATE Data  SET completed = '1' WHERE date = ? AND Time = ?"
         else:
-            query = "UPDATE Data  SET completed = '0' WHERE event = ?"
-        row = (_event,)
+            query = "UPDATE Data  SET completed = '0' WHERE date = ? AND Time = ?"
+        row = (_date,_time,)
         cursor.execute(query,row)
         db.commit()
         self.calendarWidget.updateCells()
