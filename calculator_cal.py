@@ -200,10 +200,20 @@ class mywindow(QMainWindow, Ui_MainWindow):
                     if(res[-1] == '0'):
                        self.result= round(self.result)
                 break
+    def change(self):
+        res = str(self.result)
+        for i in range(len(res)):
+            if(res[i] == '.'):
+                self.result = round(self.result,12)
+                if (i == len(res) - 2):
+                    if (res[-1] == '0'):
+                        self.result = round(self.result)
+                break
 
     #每次根据显示板上的公式进行计算
     def calculate(self):
         try:
+            self.labelpi = 0
             text = self.lineEdit.text()
             # 计算判断
             for n in range(len(text)):
@@ -232,6 +242,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
                 # 计算π值
                 if (text[n] == "π"):
                     text = text[:n] + "math.pi" + text[n + 1:]
+                    self.labelpi = 1
                 # 计算%
                 if (text[n] == "%"):
                     text = text[:n] + "*0.01" + text[n + 1:]
@@ -242,7 +253,10 @@ class mywindow(QMainWindow, Ui_MainWindow):
             self.lineEdit.clear()
             self.result = eval(text)
             # 优化结果
-            self.trans()
+            if(self.labelpi == 1):
+                self.trans()
+            else:
+                self.change()
             self.lineEdit.insert(str(self.result))
         except:
             dlg = CustomDialog()
