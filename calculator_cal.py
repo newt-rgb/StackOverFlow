@@ -78,7 +78,8 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.fs_watcher = QFileSystemWatcher()
         self.fs_watcher.addPath('database.db')
         self.fs_watcher.fileChanged.connect(lambda : self.updateTasklist(self.calendarWidget.selectedDate().toPyDate()))
-
+        #更新完成状态
+        self.tasklist.itemChanged.connect(self.isComplete)
     # 以下为事件函数具体实现部分
     result = 0
     #回退按钮
@@ -324,6 +325,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
                 item.setCheckState(QtCore.Qt.Unchecked)
             self.tasklist.addItem(item)
         self.tasklist.setCurrentRow(0)
+        self.calendarWidget.updateCells()
     
     #根据查询结果返回距离截止时间和下一次提醒时间的时长
     def CalcStamp(self, calist):
@@ -381,4 +383,17 @@ class mywindow(QMainWindow, Ui_MainWindow):
             dlg = CustomDialog("这天没有事项！")
             dlg.exec_
     
-
+    #更改数据库中的事项完成属性
+    def isComplete(self):
+        _event = str(self.tasklist.currentItem().text().splitlines(False)[0][5:])
+        db = sqlite3.connect("database.db")
+        cursor = db.cursor()
+        
+        if self.tasklist.currentItem().checkState() == Qt.Checked:
+            query = "UPDATE Data  SET completed = '1' WHERE event = ?"
+        else:
+            query = "UPDATE Data  SET completed = '0' WHERE event = ?"
+        row = (_event,)
+        cursor.execute(query,row)
+        db.commit()
+        self.calendarWidget.updateCells()

@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import QCalendarWidget
 from PyQt5.QtCore import QPoint, QDate, Qt
 from PyQt5 import QtWidgets
 import sqlite3
+from datetime import date, datetime, time
+
 
 class newCalendar(QCalendarWidget):
     def __init__(self,_tab):
@@ -12,12 +14,39 @@ class newCalendar(QCalendarWidget):
         super().paintCell(painter, rect, date)
         db = sqlite3.connect("database.db")
         cursor = db.cursor()
-        query = "SELECT date FROM Data"
+        query = "SELECT date,completed,frequency FROM Data"
         results = cursor.execute(query).fetchall()
-        list_of_events = []
+        list_of_date = []
+        list_of_freq = []
+        list_of_comp =  []
         for _date in results:
-            list_of_events.append(QDate.fromString(_date[0], 'yyyy-MM-dd'))
-        if date in list_of_events:
-            painter.setBrush(Qt.red)
-            painter.drawEllipse(rect.topLeft() + QPoint(12, 7), 6, 6)
+            list_of_date.append(QDate.fromString(_date[0], 'yyyy-MM-dd'))
+            list_of_comp.append(_date[1])
+            _list_freq = []
+            datestr = _date[2].split(',')
+            if datestr[0] == '':
+                _list_freq = []
+            else:
+                for dt in datestr:
+                    _list_freq.append(QDate.fromString(dt.split(' ')[0], 'yyyy-MM-dd'))
+            list_of_freq.append(_list_freq)
+        
+        for i, _date in enumerate(list_of_date):
+            if list_of_comp[i] == '1' and _date == date:
+                painter.setBrush(Qt.green)
+                painter.drawEllipse(rect.topLeft() + QPoint(12, 7), 6, 6)
+            elif list_of_comp[i] == '0' and _date == date:
+                painter.setBrush(Qt.red)
+                painter.drawEllipse(rect.topLeft() + QPoint(12, 7), 6, 6)
+            
+        for i,_datelist in enumerate(list_of_freq):
+            for _date in _datelist:
+                if _date < QDate.currentDate():
+                    continue
+                else:
+                    if list_of_comp[i] == '1' and _date == date:
+                        continue
+                    elif list_of_comp[i] == '0' and _date == date:
+                        painter.setBrush(Qt.blue)
+                        painter.drawEllipse(rect.topRight() + QPoint(-12, 7), 6, 6)
             
