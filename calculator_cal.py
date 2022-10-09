@@ -432,6 +432,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
                     toast.show_toast(
                         '提醒！',
                         _data[0],
+                        icon_path='icon.ico',
                         duration=5,
                         threaded=True
                     )
