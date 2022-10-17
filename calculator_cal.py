@@ -1,4 +1,5 @@
 # 主要完成在计算器中点击事件的信号和事件函数的连接
+from pickle import TRUE
 import sqlite3
 import frozen_dir
 import sys
@@ -288,6 +289,7 @@ class mywindow(QMainWindow, Ui_MainWindow):
         self.addw = cwindow()
         _date = self.calendarWidget.selectedDate().toPyDate().strftime("开始:%Y年%m月%d日")
         self.addw.lineEdit_2.setText(_date)
+        self.addw.lineEdit_2.setReadOnly(True)
         curDate = date.today()
         selcDate = self.calendarWidget.selectedDate().toPyDate()
 
